@@ -1,7 +1,7 @@
 ---
 
-title: router_IGP_algorythm
-date: 2026-03-06 +0900
+title: 라우터 IGP 알고리즘 - RIP 
+date: 2026-03-06 13:00:00 +0900
 category: network
 tag: study
 
