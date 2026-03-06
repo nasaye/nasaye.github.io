@@ -1,0 +1,107 @@
+---
+
+title: router_IGP_algorythm
+date: 2026-03-06 +0900
+category: network
+tag: study
+
+---
+
+### 개요
+
+1. IGP 라우팅 프로토콜 
+2. 각 프로토콜별 알고리즘
+
+---
+
+### RIP
+
+Routing Information Protocol
+
+- Distance Vector 타입.
+- 라우터간 hop 수를 metric 으로 계산.
+- IPv4 에 RIPv2, IPv6 에 RIPng 사용.
+- 정기적 자동 업데이트. 
+- 224.0.0.9 멀티캐스트 주소로 업데이트.
+- 최대 15 hop (소규모 구성에 적합)
+- 대역폭에 대한 고려 없어, OSPF, EIGRP 에 대체되는 분위기
+- UDP 520 port 사용
+- Command | Ve rsion | Routing entries ( IP address Subnet mask Metric ) 정보 제공.
+
+#### RIP Algorythm
+
+ $ D_x(y) = min_v { c(x,v) + D_v(y) } $
+
+Distance x->y 는 최소벡터 { x에서 이웃(v)까지의 비용(cost) + D_v(y)}
+
+각 라우터는 자기 이웃에게 30초 간격으로 라우팅 테이블을 공유한다.
+cost를 hop 으로 계산한다면, 단순히 이웃에게 받은 테이블에 값을 1 더해 저장한다.
+
+
+x 가 dest y 까지 가는 루트를 탐색한다고 가정하자.
+x는 RIP 를 통해 Routing Info Base 를 갱신하고 있다.
+RIP에 이웃 a,b 가 같은 거리 (cost 1) 에 있다고 할 때
+ - D_a(y) = 5
+ - D_b(y) = 10 
+이라는 테이블 값을 보내온다면, x는 메트릭이 더 적은 D_a(y)+1 을 선택, RIB에 저장한다. 
+
+
+### Count-to-Infinite 문제
+
+RIP 가 이웃이 제공하는 정보에 의존해 경로를 결정하는 점에서 문제가 발생한다.
+정보의 갱신이 즉시 이뤄지는 것이 아니라 더욱 문제다.
+
+| 타이머        | 기본값 | 의미                 |
+| ------------- | ------ | -------------------- |
+| Update timer  | 30s    | 라우팅 정보 전송     |
+| Invalid timer | 180s   | 경로가 죽었다고 판단 |
+| Flush timer   | 240s   | 테이블에서 완전 삭제 |
+
+A - B - C 로 이어진 라우팅 네트워크에서 B - C 간 연결이 끊어졌을 때,
+B는 180초동안 C 경로가 살아있다고 판단하고 A로 C에 대한 경로 정보를 제공한다.
+
+문제는 180초가 지나고, B가 C unreachable 선고를 내렸을 때, 
+B의 RIP 는 이웃 A의 라우팅 테이블을 참조해 A - B - C 로 이어지는 메트릭4 경로를 라우팅 테이블에 등록하게 된다.
+B-A-B-C 로 이어지는 경로는 B-C 가 죽었기 때문에 불가능하지만, 
+A 라우터는 B에게로부터 C unreachable 정보를 받지 못한 상태이기 때문에 B-A-B-C 문제가 생긴 것이다.
+
+문제의 이름이  Count to Infinite 인 이유가 이제 등장한다.
+A는, D_B(C) 가 B-A-B-C 로 업데이트 되었음을 확인하고, C까지의 경로를 A-B-C에서 A-B-A-B-C 로 수정한다.
+B는 그것을 보고 다시 B-A-B-A-B-C 로 수정.. 이렇게 계속해서 반복하는 것이다.
+
+결국 이 시간동안 A,B 는 C에 라우팅하지 못한다.
+
+이 문제의 원인은 라우터가 DV (이웃 정보)만 신뢰하고 전체 네트워크 토폴리지를 모른다는 것.
+
+#### 방지책 1. Split Horizon
+
+| 이웃에게 배운 경로는 이웃에게 다시 광고하지 않는다.
+
+간단한 원칙으로 CTI 를 일부 방지할 수 있다. 
+A-B 간에 일어나는 무한 교환은 A가 B를 포함한 경로를 B에게 제공하지 않는 것으로 해결 가능하다.
+
+#### 방지책 2. Route Poisoning
+ 
+| unreachable 이 뜨면, 바로 전달해라.
+
+잘못된 경로가 확산되는 주요 원인은 30초라는 긴 대기시간이다.
+경로가 죽으면 즉시 전송해야 한다.
+
+
+#### 방지책 3. Hold Down Timer
+
+Z-A-B-C 로 이어지는 경로에서 B-C 가 unreachable 되었다고 하자.
+Split horizon 에 의해 A->B-C 경로는 차단된다. 이웃에게 배운 경로를 광고하지 않기 때문.
+그런데 Z 가 B와 연결되어 있다면? 
+Z-B-C 는 Split horizon 에 의해 차단되지만 Z-A-B-C 는 Z가 B에서 전달받은 경로가 아니기 때문에 차단되지 않는다.
+결국 이를 막기 위해 ureachable 된 경로에 대해서는 일정 시간동안 새로운 경로를 받아들이지 않는다.
+네트워크가 안정될 때까지 기다리는 것이다.
+
+#### 방지책 4. Max hop limit
+
+결국 RIP로는 C-to-I 를 막기 힘들기 때문에 16홉이라는 MAX 리미트를 두고, 15홉을 넘으면 unreachable 판정을 내린다.
+
+
+이러한 문제점으로 인해 ESPF, EIGRP 가 선호된다.
+---
+
