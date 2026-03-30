@@ -1,12 +1,11 @@
-
 ---
-title: git-post-자동화
+title: 메모 템플릿 자동화-3
 date: 2026-03-29 21:00:47 +09:00
-categories: [side_project]
+categories: [automation]
 tags: [git,pwsh]
 ---
 
-### git-page 에 포스트하는 pwsh 함수 만들기! 
+### git-page 에 포스트하는 pwsh 함수 만들기
 
 목표는 명료하다. 자동 포스팅.
 자동 템플릿 만들기로 포스트를 위한 파일양식을 준비했으니, 
