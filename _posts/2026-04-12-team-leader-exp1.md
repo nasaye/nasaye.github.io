@@ -1,5 +1,5 @@
 ---
-title: 팀장 경험 : 나와 팀원의 목표가 일치하지 않을 때
+title: 팀장 경험 - 나와 팀원의 목표가 일치하지 않을 때
 date: 2026-04-12 22:16:57 +09:00
 categories: [team]
 tags: [team, study]
