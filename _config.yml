@@ -16,7 +16,7 @@ timezone: Asia/Seoul
 
 title: Daily stack # the main title
 
-tagline: 다시 보고 싶은 내용들을 기록합니다. # it will display as the subtitle
+tagline: 요즘 공부하는게 참 재밌어 # it will display as the subtitle
 
 description: >- # used by seo meta and the atom feed
   A
@@ -87,7 +87,7 @@ pageviews:
 #     light — Use the light color scheme
 #     dark — Use the dark color scheme
 #
-theme_mode: # [light | dark]
+theme_mode: light # [light | dark]
 
 # The CDN endpoint for media resources.
 # Notice that once it is assigned, the CDN url
