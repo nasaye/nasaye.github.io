@@ -9,6 +9,7 @@ tag : network, study, error
 
 ![log](https://github.com/user-attachments/assets/773e6913-ef4e-4057-aa34-a0baf95eac15)
 
+
 토폴로지 와이어샤크 패킷로그에 계속해서 올라오는 이 메세지의 정체는 무엇일까?
 
 로그를 보면 4.4.4.2가 보내는 ARP임을 알 수 있다.
@@ -43,6 +44,7 @@ ARP 의 reply 는 없이 공허한 외침만 반복하고 있는 게 아닐까.
 ### 돌발상황
 
 ![warn](https://github.com/user-attachments/assets/ae3d7c83-826c-4a57-885a-475cb7e3eca4)
+
 
 갑자기 다른 친구 (가상OS) 도 자기 게이트웨이 MAC 주소를 찾는 ARP를 보내기 시작했다.
 
