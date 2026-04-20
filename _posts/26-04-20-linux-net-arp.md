@@ -1,6 +1,6 @@
 ---
 title : ARP NUD 의 상태 관리 매커니즘에 관하여 
-date : 2026-03-07 16:15:00 +0900
+date : 2026-04-20 16:15:00 +0900
 category : [study,network]
 tag : network, study, linux, nud, error
 ---
