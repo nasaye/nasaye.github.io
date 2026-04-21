@@ -228,7 +228,11 @@ DHCP 실패해서 이름 해석 필요하니까 발생
 
 
 
-![범인](https://github.com/user-attachments/assets/59aaf0b3-c546-4ceb-9825-19f65aaaa088)
+![범인](https://i.imgur.com/KvqX80M.png)
+
+
+![범인2](https://i.imgur.com/jL41Qrm.png)
+
 
 원인 찾았다. 이 항목에 체크해놔서 host 가상 어댑터가 네트워크에 들어와서 IP 달라고 날뛰고 있던 것.
 
@@ -252,7 +256,7 @@ IGMP 와 같은 역할.
 4.4.4.1 에 IPv6 설정이 켜져있다는 뜻
 
 
-![3c](https://github.com/user-attachments/assets/f33ae625-cb29-4e0e-a8e7-b95004c38c0b)
+![3c](https://i.imgur.com/zhWthnx.png)
 
 DAD 하면서 갖고싶은 IPv6 주소 광고하더니 결국 가져가는 모습이다
 
